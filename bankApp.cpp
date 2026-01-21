@@ -1,17 +1,56 @@
 #include <iostream>
 #include <string>
 
+class User {
+    public:
+        std::string userName;        
+        std::string passWord;        
+        double balance;
+        
+        //constructor
+        User(std::string x, std::string y, double z) {
+            userName = x;
+            passWord = y;
+            balance = z;
+        }
+        // method to check login
+        bool checkLogin (std::string inputName, std::string inputPassword) {
+            if (userName == inputName && passWord == inputPassword) {
+                return true;
+            }
+            else {
+                return false;
+            }
+
+        }
+        void showBalance () {
+            std::cout << "Your account balance is : " << balance; 
+        }
+        void deposit (double amount) {
+            balance = balance + amount;
+        }
+        bool withdraw(double amount) {
+            if (amount <= balance) {
+                balance = balance - amount;
+                return true;
+            }
+            else {
+                std::cout << "Insufficent funds";
+                return false;
+            }
+        }
+};
+
 int main () {
-    
+  
     // create variables
-    const std::string userName = "admin";
-    const std::string passWord = "1234";
     std::string tryUserName;
     std::string tryPassWord;
     int choice = 0;
-    double balance = 100;
-    double deposit;
-    double withdraw; 
+    double depositAmount;
+    double withdrawAmount; 
+
+    User admin("admin", "1234", 100);
 
     // take credentials from user
     std::cout << "Enter username: \n";
@@ -20,7 +59,7 @@ int main () {
     std::cin >> tryPassWord;
 
     // check if credentials match
-    if (userName == tryUserName && passWord == tryPassWord) {
+    if (admin.checkLogin(tryUserName, tryPassWord)) {
         std::cout << "Login successful!\n";
         
         // while loop to keep app running if user takes other option than 4
@@ -42,21 +81,20 @@ int main () {
         }
 
         else if (choice == 1) {
-            std::cout << "Your account balance is: " << balance << "\n";
+            std::cout << "Your account balance is: " << admin.balance << "\n";
         }
         else if (choice == 2) {
             std::cout << "Enter deposit amount: ";
-            std::cin >> deposit;
-            balance = balance + deposit;
-            std::cout << "New balance is: " << balance << "\n";
+            std::cin >> depositAmount;
+            admin.deposit(depositAmount);
+            std::cout << "Deposit successful.\n" << "New balance is: " << admin.balance << "\n";
         }
 
         else if (choice == 3) {
             std::cout << "Enter withdrawal amount: ";
-            std:: cin >> withdraw;
-            if (balance >= withdraw) {
-            balance = balance - withdraw;
-            std::cout << "New balance is: " << balance << "\n";
+            std:: cin >> withdrawAmount;
+            if (admin.withdraw(withdrawAmount)) {
+            std::cout << "Withdrawal succesful.\n " << "New balance is: " << admin.balance << "\n";
             }
             else {
                 std::cout << "Insufficent funds";
