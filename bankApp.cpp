@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 class User
 {
@@ -53,12 +54,26 @@ public:
 };
 
 int main()
-{
-    //add users with push.back
+{   
     std::vector<User> users;
-    users.push_back(User("admin", "1234", 100));
-    users.push_back(User("jesse", "1111", 5000));
-    users.push_back(User("hanna", "0000", 20));
+    
+    //open file
+    std::ifstream myFile("users.txt");
+    // does file open ?
+    if (!myFile) {
+        std::cout << "error\n";
+        return 1;
+    }
+
+    std::string name, password;
+    double balance;
+
+     //add users from users.txt with push.back
+    while (myFile >> name >> password >> balance) {
+        users.push_back(User(name, password, balance));
+    }
+    myFile.close();
+
 
     // create variables
     std::string tryUserName;
@@ -145,6 +160,19 @@ int main()
     {
         std::cout << "Wrong credentials \n";
     }
+    std::ofstream outFile("users.txt");
+
+    if (!outFile) {
+        std::cout << "Could not write to file\n";
+        return 1;
+    }
+
+    for (int i = 0; i < users.size(); i++) {
+        outFile << users[i].userName << " ";
+        outFile << users[i].passWord << " ";
+        outFile << users[i].balance << " \n";
+    }
+    outFile.close();
     std::cout << "Logged out.";
 
     return 0;
